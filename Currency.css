@@ -41,6 +41,18 @@ h1 {
     color: var(--input-background-dark);
 }
 
+#userStatus {
+    margin-bottom: 20px;
+}
+
+#statusMessage {
+    font-size: 18px;
+    color: var(--text-light);
+    background-color: var(--primary-dark);
+    padding: 10px;
+    border-radius: 5px;
+}
+
 i{
     color: black;
 }

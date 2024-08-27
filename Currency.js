@@ -71,3 +71,22 @@ document.querySelector('i').addEventListener('click', () => {
     updateFlagImage('#CurrencyOp1', img1);
     updateFlagImage('#CurrencyOp2', img2);
 });
+
+// Online/Offline Status
+function updateOnlineStatus() {
+    const statusElement = document.getElementById('statusMessage');
+    if (navigator.onLine) {
+        statusElement.textContent = 'You are online';
+        statusElement.style.backgroundColor = 'green';
+    } else {
+        statusElement.textContent = 'You are offline';
+        statusElement.style.backgroundColor = 'red';
+    }
+}
+
+// Initial status check
+updateOnlineStatus();
+
+// Event listeners for online/offline status changes
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
