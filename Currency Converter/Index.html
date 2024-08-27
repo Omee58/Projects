@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="Currency.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div id="main">
+        <div id="inner">
+            <h1>Currency Converter</h1>
+
+            <div id="userStatus">
+                <p id="statusMessage">Checking status...</p>
+            </div>
+
+            <div class="converter">
+                <div class="input-group">
+                    <img id="img1" class="flag" src="https://flagsapi.com/US/flat/64.png" alt="Country Img">
+                    <select id="CurrencyOp1" >
+                        <option value="AUD">AU</option>
+                        <option value="BGN">BG</option>
+                        <option value="BRL">BR</option>
+                        <option value="CAD">CA</option>
+                        <option value="CHF">CH</option>
+                        <option value="CNY">CN</option>
+                        <option value="CZK">CZ</option>
+                        <option value="DKK">DK</option>
+                        <option value="EUR">EU</option>
+                        <option value="GBP">GB</option>
+                        <option value="HKD">HK</option>
+                        <option value="HRK">HR</option>
+                        <option value="HUF">HU</option>
+                        <option value="IDR">ID</option>
+                        <option value="ILS">IL</option>
+                        <option value="INR">IN</option>
+                        <option value="ISK">IS</option>
+                        <option value="JPY">JP</option>
+                        <option value="KRW">KR</option>
+                        <option value="MXN">MX</option>
+                        <option value="MYR">MY</option>
+                        <option value="NOK">NO</option>
+                        <option value="NZD">NZ</option>
+                        <option value="PHP">PH</option>
+                        <option value="PLN">PL</option>
+                        <option value="RON">RO</option>
+                        <option value="RUB">RU</option>
+                        <option value="SEK">SE</option>
+                        <option value="SGD">SG</option>
+                        <option value="THB">TH</option>
+                        <option value="TRY">TR</option>
+                        <option value="USD" selected>US</option>
+                        <option value="ZAR">ZA</option>
+
+                    </select>
+
+                    <input id="input1" type="number" autofocus placeholder="Amount">
+                </div>
+
+                <div class="arrow">
+                    <i class="fa-duotone fa-solid fa-arrow-right-arrow-left"></i>
+                </div>
+
+                <div class="input-group">
+                    <img id="img2" class="flag" src="https://flagsapi.com/IN/flat/64.png" alt="Country Img">
+                    <select id="CurrencyOp2">
+                        <option value="AUD">AU</option>
+                        <option value="BGN">BG</option>
+                        <option value="BRL">BR</option>
+                        <option value="CAD">CA</option>
+                        <option value="CHF">CH</option>
+                        <option value="CNY">CN</option>
+                        <option value="CZK">CZ</option>
+                        <option value="DKK">DK</option>
+                        <option value="EUR">EU</option>
+                        <option value="GBP">GB</option>
+                        <option value="HKD">HK</option>
+                        <option value="HRK">HR</option>
+                        <option value="HUF">HU</option>
+                        <option value="IDR">ID</option>
+                        <option value="ILS">IL</option>
+                        <option value="INR" selected>IN</option>
+                        <option value="ISK">IS</option>
+                        <option value="JPY">JP</option>
+                        <option value="KRW">KR</option>
+                        <option value="MXN">MX</option>
+                        <option value="MYR">MY</option>
+                        <option value="NOK">NO</option>
+                        <option value="NZD">NZ</option>
+                        <option value="PHP">PH</option>
+                        <option value="PLN">PL</option>
+                        <option value="RON">RO</option>
+                        <option value="RUB">RU</option>
+                        <option value="SEK">SE</option>
+                        <option value="SGD">SG</option>
+                        <option value="THB">TH</option>
+                        <option value="TRY">TR</option>
+                        <option value="USD">US</option>
+                        <option value="ZAR">ZA</option>
+                    </select>
+
+                    
+                    <p id="Output2">Amount</p>
+                </div>
+            </div>
+
+            <button id="convertBtn">Convert</button>
+            <button id="toggleThemeBtn">Toggle Theme</button>
+        </div>
+    </div>
+    <script src="Currency.js"></script>
+</body>
+
+</html>
