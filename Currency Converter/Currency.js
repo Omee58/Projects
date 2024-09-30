@@ -47,10 +47,10 @@ btn.addEventListener('click', () => {
 
     // Fetch exchange rates
     Promise.all([
-        fetch('https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_X6bIyQeijBvHPhNan8z5Skvkbw2tHwHoDs5j6XK3')
+        fetch('https://api.freecurrencyapi.com/v1/latest?apikey={YOUR_API_KEY}')
             .then(response => response.json())
             .then(data => FValue1 = data.data[CurSel1.value]),
-        fetch('https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_X6bIyQeijBvHPhNan8z5Skvkbw2tHwHoDs5j6XK3')
+        fetch('https://api.freecurrencyapi.com/v1/latest?apikey={YOUR_API_KEY}')
             .then(response => response.json())
             .then(data => FValue2 = data.data[CurSel2.value])
     ]).then(() => {
