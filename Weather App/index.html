@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #a2c2e2, #e5e5e5);
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background: #f9f9f9;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            width: calc(100% - 24px);
+        }
+
+        input[type="text"]:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
+            outline: none;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.3s;
+            margin-top: 10px;
+            background: #007bff;
+            color: #ffffff;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn.reset {
+            background: #dc3545;
+        }
+
+        .btn.reset:hover {
+            background: #c82333;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+            transition: opacity 0.5s ease;
+        }
+
+        .weather-info.hidden {
+            opacity: 0;
+        }
+
+        .weather-info h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .weather-info p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .suggestions {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #007bff;
+            border-radius: 8px;
+            background: #fff;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            width: calc(100% - 24px);
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .suggestions li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestions li:hover {
+            background: #007bff;
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            input[type="text"],
+            .btn {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div style="position: relative;">
+            <input type="text" id="city" autofocus placeholder="Enter city name">
+            <ul class="suggestions" id="suggestions"></ul>
+        </div>
+        <button class="btn" id="getWeatherBtn">Get Weather</button>
+        <button class="btn reset" id="resetBtn">Reset</button>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+        <div class="weather-info" id="weatherInfo"></div>
+    </div>
+
+    <script>
+        const apiKey = 'LJEKGPNSHGVP6RZSNENRZ7FY9';
+        const baseURL = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/';
+        const suggestionsList = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Jaipur', 'Pune', 'Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar', 'Jamnagar', 'Gandhinagar', 'Junagadh', 'Anand', 'Navsari', 'Morbi', 'Nadiad', 'Surendranagar', 'Bharuch', 'Mehsana', 'Bhuj', 'Porbandar', 'Palanpur', 'Valsad', 'Vapi', 'Gondal', 'Veraval', 'Godhra', 'Patan', 'Kalol', 'Botad', 'Amreli', 'Deesa', 'Jetpur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Ghaziabad', 'Ludhiana', 'Agra', 'Nashik', 'Faridabad', 'Meerut', 'Kalyan-Dombivali', 'Vasai-Virar', 'Varanasi', 'United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Italy', 'Spain', 'Japan', 'China'];
+
+        const cityInput = document.getElementById('city');
+        const suggestionsElement = document.getElementById('suggestions');
+        const weatherInfo = document.getElementById('weatherInfo');
+        const loadingElement = document.getElementById('loading');
+
+        cityInput.addEventListener('input', () => {
+            const query = cityInput.value.toLowerCase();
+            suggestionsElement.innerHTML = '';
+
+            if (query) {
+                const filteredSuggestions = suggestionsList.filter(city => city.toLowerCase().includes(query));
+                filteredSuggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.textContent = suggestion;
+                    li.addEventListener('click', () => {
+                        cityInput.value = suggestion;
+                        suggestionsElement.innerHTML = '';
+                        suggestionsElement.style.display = 'none';
+                    });
+                    suggestionsElement.appendChild(li);
+                });
+                suggestionsElement.style.display = filteredSuggestions.length > 0 ? 'block' : 'none';
+            } else {
+                suggestionsElement.style.display = 'none';
+            }
+        });
+
+        cityInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                suggestionsElement.style.display = 'none';
+            }, 200); // Small delay to allow click on suggestions
+        });
+
+        document.getElementById('getWeatherBtn').addEventListener('click', () => {
+            const city = cityInput.value.trim();
+            if (city) {
+                fetchWeather(city);
+            } else {
+                alert('Please enter a city name');
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            cityInput.value = '';
+            weatherInfo.innerHTML = '';
+            weatherInfo.classList.add('hidden');
+        });
+
+        function fetchWeather(city) {
+            const url = `${baseURL}${encodeURIComponent(city)}?unitGroup=metric&include=current&key=${apiKey}&contentType=json`;
+
+            loadingElement.classList.add('active');
+            weatherInfo.classList.add('hidden');
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    loadingElement.classList.remove('active');
+                    const current = data.currentConditions;
+                    const temperature = current.temp;
+                    const weatherHtml = `
+                        <h2>Weather in ${city.charAt(0).toUpperCase() + city.slice(1)}</h2>
+                        <p>Temperature: ${temperature}°C</p>
+                        <p>Weather: ${current.conditions}</p>
+                        <p>Humidity: ${current.humidity}%</p>
+                        <p>Wind Speed: ${current.windspeed} km/h</p>
+                    `;
+                    weatherInfo.innerHTML = weatherHtml;
+                    weatherInfo.classList.remove('hidden');
+                    updateBackground(temperature);
+                })
+                .catch(error => {
+                    loadingElement.classList.remove('active');
+                    console.error('Error fetching weather data:', error);
+                    alert('Failed to fetch weather data. Please try again.');
+                });
+        }
+
+        function updateBackground(temperature) {
+            let color;
+            if (temperature <= 0) {
+                color = '#00f'; // Blue for very cold
+            } else if (temperature <= 10) {
+                color = '#1e90ff'; // Light blue for cold
+            } else if (temperature <= 20) {
+                color = '#87cefa'; // Sky blue for cool
+            } else if (temperature <= 30) {
+                color = '#ffcc00'; // Yellow for warm
+            } else if (temperature <= 40) {
+                color = '#ff4500'; // Orange for hot
+            } else {
+                color = '#ff0000'; // Red for very hot
+            }
+            document.body.style.background = `linear-gradient(135deg, ${color}, #ffffff)`;
+        }
+    </script>
+</body>
+
+</html>
