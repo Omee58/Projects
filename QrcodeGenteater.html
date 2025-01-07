@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Updated font for a modern look */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(145deg, #f8f9fc, #e2e4e9); /* Soft gradient background */
+        }
+
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            gap: 10px; /* Space between input and buttons */
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            flex: 1;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background: #f9f9f9;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
+            outline: none;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.3s;
+            min-width: 100px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-tertiary {
+            background: #17a2b8;
+            color: #ffffff;
+        }
+
+        .btn-tertiary:hover {
+            background: #138496;
+        }
+
+        .btn-tertiary:active {
+            transform: scale(0.98);
+        }
+
+        .qr-container {
+            margin-top: 20px;
+            width: 150px;
+            height: 150px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .qr-container img {
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.3s;
+        }
+
+        .qr-container img:hover {
+            transform: scale(1.05);
+        }
+
+        #generateBtn{
+            margin-top: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 5px;
+                border-radius: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <div class="input-group">
+            <input type="text" name="URL" id="URL" placeholder="Enter URL here">
+            <button class="btn btn-secondary" id="pasteBtn">Paste</button>
+            <button class="btn btn-tertiary" id="shareBtn">Share</button>
+        </div>
+        <div class="qr-container">
+            <img id="qrImage">
+        </div>
+        <button class="btn btn-primary" id="generateBtn">Generate QR Code</button>
+    </div>
+
+    <script>
+        const img = document.querySelector('#qrImage');
+        const input = document.querySelector('#URL');
+        const generateBtn = document.querySelector('#generateBtn');
+        const pasteBtn = document.querySelector('#pasteBtn');
+        const shareBtn = document.querySelector('#shareBtn');
+
+        generateBtn.addEventListener('click', () => {
+            if (!input.value) {
+                alert('Please enter a URL');
+                return;
+            }
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${input.value}`;
+        });
+
+        pasteBtn.addEventListener('click', () => {
+            
+            navigator.clipboard.readText().then(text => {
+                input.value = text;
+            }).catch(err => {
+                console.error('Failed to read clipboard contents: ', err);
+            });
+        });
+
+        shareBtn.addEventListener('click', () => {
+            if (!img.src) {
+                alert('Generate a QR Code first');
+                return;
+            }
+            fetch(img.src)
+                .then(response => response.blob())
+                .then(blob => {
+                    const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+                    const shareData = {
+                        title: 'QR Code',
+                        text: 'Here is your QR Code!',
+                        files: [file]
+                    };
+                    navigator.share(shareData).then(() => {
+                        alert('Thanks for sharing!');
+                    }).catch(err => {
+                        console.error('Failed to share: ', err);
+                    });
+                });
+        });
+    </script>
+</body>
+
+</html>
